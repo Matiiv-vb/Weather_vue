@@ -34,6 +34,14 @@ export default {
       cities: [],
     };
   },
+  props: {
+    cityItem: {
+      type: Object,
+    },
+    idArray: {
+      type: Number,
+    },
+  },
   methods: {
     cityFullInfo(item) {
       return (
@@ -85,6 +93,10 @@ export default {
           .then(({ data, dataForecast }) => {
             this.$store.commit("setCurrWeather", data);
             this.$store.commit("setFourDaysWeather", dataForecast.list);
+            this.$store.commit("updateCard", {
+              index: this.idArray,
+              data: this.cityItem,
+            });
           });
         this.cities.length = 0;
       } else {
@@ -102,6 +114,10 @@ export default {
               .then(({ data, dataForecast }) => {
                 this.$store.commit("setCurrWeather", data);
                 this.$store.commit("setFourDaysWeather", dataForecast.list);
+                this.$store.commit("updateCard", {
+                  index: this.idArray,
+                  data: this.cityItem,
+                });
               });
             this.cities.length = 0;
           })
@@ -180,7 +196,7 @@ export default {
   background: rgba(158, 155, 155, 0.5);
   color: #000;
   position: relative;
-  z-index: 4;
+  /* z-index: 4; */
   width: 100%;
 }
 
@@ -202,7 +218,7 @@ input[type="search"]::-webkit-search-results-decoration {
   top: 20%;
   width: 15px;
   height: 15px;
-  z-index: 4;
+  /* z-index: 4; */
 }
 
 .search__img img {

@@ -5,7 +5,26 @@
       <div
         class="add-button"
         v-if="isSearch"
+        @click="$store.dispatch('addCard')"
+      ></div>
+      <div
+        class="save-button"
+        v-if="isSearch"
         @click="$store.dispatch('addBlock')"
+      >
+        save
+      </div>
+      <div
+        class="delete-button margin-left-button"
+        v-if="isSearch"
+        @click="
+          $store.commit('setModalData', {
+            city: cityDataCardItem.city,
+            delete: true,
+            card: true,
+            idArray: idArray,
+          })
+        "
       ></div>
       <div
         class="delete-button"
@@ -14,15 +33,20 @@
           $store.commit('setModalData', {
             city: cityDataBlockItem.city,
             delete: true,
+            block: true,
           })
         "
       ></div>
     </div>
-    <weather-search v-if="isSearch"></weather-search>
-    <weather-temperature :cityItem="cityDataBlockItem"></weather-temperature>
+    <weather-search
+      v-if="isSearch"
+      :cityItem="cityDataCardItem"
+      :idArray="idArray"
+    ></weather-search>
+    <weather-temperature :cityItem="currentCityItem"></weather-temperature>
     <div v-if="!isTemparature">
       <temperature-chart
-        :cityItem="cityDataBlockItem"
+        :cityItem="currentCityItem"
         :chartId="chartId"
       ></temperature-chart>
     </div>
@@ -43,7 +67,6 @@ import TemperatureChart from "@/components/TemperatureChart.vue";
 import Switch from "@/components/Switch.vue";
 import TemperatureChartData from "@/temperature-data.js";
 
-
 export default {
   name: "WeatherCard",
   components: {
@@ -57,9 +80,15 @@ export default {
     cityDataBlockItem: {
       type: Object,
     },
+    cityDataCardItem: {
+      type: Object,
+    },
     isSearch: {
       type: Boolean,
       default: false,
+    },
+    idArray: {
+      type: Number,
     },
   },
   mounted() {
@@ -87,15 +116,28 @@ export default {
     },
   },
   computed: {
-    id() {
+    idBlock() {
       return this.cityDataBlockItem ? this.cityDataBlockItem.city.id : "";
     },
+    idCard() {
+      return this.cityDataCardItem ? this.cityDataCardItem.city.id : "";
+    },
     chartId() {
-      return this.id ? `temperature-chart${this.id}` : "temperature-chart";
+      return this.idBlock
+        ? `temperature-chart${this.idBlock}`
+        : `temperature-chart${this.idCard}${this.idArray}`;
+    },
+    currentCityItem() {
+      return this.cityDataBlockItem
+        ? this.cityDataBlockItem
+        : this.cityDataCardItem;
     },
     getFourDaysWeather() {
       if (this.cityDataBlockItem && this.cityDataBlockItem.fourDaysWeather) {
         return this.cityDataBlockItem.fourDaysWeather;
+      }
+      if (this.cityDataCardItem && this.cityDataCardItem.fourDaysWeather) {
+        return this.cityDataCardItem.fourDaysWeather;
       } else {
         return this.$store.getters.getFourDaysWeather;
       }
@@ -120,6 +162,13 @@ export default {
   justify-content: space-between;
 }
 
+.save-button {
+  position: absolute;
+  right: 70px;
+  color: #fff;
+  transition: all 0.3s;
+}
+
 .add-button,
 .delete-button {
   position: absolute;
@@ -130,6 +179,11 @@ export default {
   transition: all 0.3s;
 }
 
+.margin-left-button {
+  right: 35px;
+}
+
+.save-button:hover,
 .add-button:hover,
 .delete-button:hover {
   transform: scale(1.1);

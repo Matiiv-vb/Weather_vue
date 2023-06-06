@@ -11,7 +11,7 @@
         </template>
         <template v-slot:body>
           <div v-if="getModalData.delete">
-            Delete city "{{ getModalData.city.name }}" from blocks ?
+            Delete city "{{ getModalData.city.name }}"?
           </div>
           <div v-if="getModalData.hint">{{ getModalData.message }}</div>
         </template>
@@ -44,7 +44,15 @@ export default {
   mounted() {},
   methods: {
     deleteItem(e) {
-      this.$store.dispatch("deleteBlock", this.getModalData.city);
+      if (this.getModalData.block) {
+        this.$store.dispatch("deleteBlock", this.getModalData.city);
+      }
+      if (this.getModalData.card) {
+        this.$store.commit("deleteCard", {
+          city: this.getModalData.city,
+          idArray: this.getModalData.idArray,
+        });
+      }
     },
     hint(e) {
       this.$store.commit("setModalData", "");

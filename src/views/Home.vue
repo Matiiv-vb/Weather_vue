@@ -1,11 +1,13 @@
 <template>
   <div v-if="showApp" class="home__wrapper">
-    <div class="head__wrapper">
-      <WeatherCard :isSearch="true" />
-    </div>
-    <div v-if="$store.getters.getBlocks" class="blocks__wrapper">
-      <div v-for="(block, index) in $store.getters.getBlocks" :key="index">
-        <WeatherCard :cityDataBlockItem="block" :key="block.city.id" />
+    <div v-if="$store.getters.getCards" class="blocks__wrapper">
+      <div v-for="(card, index) in $store.getters.getCards" :key="index">
+        <WeatherCard
+          :cityDataCardItem="card"
+          :key="card.city.id"
+          :isSearch="true"
+          :idArray="index"
+        />
       </div>
     </div>
   </div>
@@ -35,6 +37,15 @@ export default {
       .then(({ data, dataForecast }) => {
         this.$store.commit("setCurrWeather", data);
         this.$store.commit("setFourDaysWeather", dataForecast.list);
+
+        if (this.$store.getters.getCards.length < 1) {
+          this.$store.commit("addCards", {
+            city: this.$store.getters.getCityInfo,
+            currentWeather: data,
+            fourDaysWeather: dataForecast.list,
+          });
+        }
+
         this.showApp = true;
       });
   },

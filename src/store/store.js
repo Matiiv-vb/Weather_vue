@@ -17,6 +17,16 @@ export default createStore({
     },
     cities: [],
     blocks: [],
+    cards: [
+      // {
+      //   city: {
+      //     name: "Kharkiv",
+      //     lat: 49.9923,
+      //     lon: 36.231,
+      //     id: (36.231).toString() + (49.9923).toString(),
+      //   },
+      // },
+    ],
     currentWeather: "",
     fourDaysWeather: "",
     loader: false,
@@ -64,6 +74,9 @@ export default createStore({
     },
     getError(state) {
       return state.error;
+    },
+    getCards(state) {
+      return state.cards;
     },
     getBlocks(state) {
       return state.blocks;
@@ -136,6 +149,29 @@ export default createStore({
       });
       this.dispatch("setBlocksLS");
     },
+    updateCard(state, { index, data }) {
+      console.log(index, "TTTTTTTT", data);
+      state.cards.forEach((block, ind) => {
+        if (block.city.id === data.city.id) {
+          state.cards[index] = {
+            currentWeather: state.currentWeather,
+            fourDaysWeather: state.fourDaysWeather,
+            city: state.city,
+          };
+        }
+      });
+    },
+    addCards(state, data) {
+      state.cards.push(data);
+    },
+    deleteCard(state, { city, idArray }) {
+      if (state.cards.length > 1) {
+        state.cards = state.cards.filter((el, ind) => {
+          return el.city.id !== city.id && idArray !== ind;
+        });
+      }
+      this.commit("setModalData", "");
+    },
   },
   actions: {
     async fetchCities({ getters, commit }, city) {
@@ -174,9 +210,10 @@ export default createStore({
     setBlocksLS({ getters, commit }) {
       commit("setBlocksLS");
     },
-    deleteBlock({ getters, commit }, city) {
+    deleteBlock({ commit }, city) {
       commit("deleteBlock", city.id);
     },
+
     addBlock({ getters, commit, state }, data) {
       let hasBlock = "";
       if (state.blocks && state.blocks.length >= 5) {
@@ -208,6 +245,24 @@ export default createStore({
         });
       }
     },
+
+    addCard({ getters, commit, state }, data) {
+      if (state.cards && state.cards.length >= 5) {
+        this.commit("setModalData", {
+          hint: true,
+          message: "In order to add - delete the city, 5 is a max",
+          city: state.city,
+        });
+      }
+      if (state.cards && state.cards.length <= 4) {
+        commit("addCards", {
+          city: state.city,
+          currentWeather: state.currentWeather,
+          fourDaysWeather: state.fourDaysWeather,
+        });
+      }
+    },
+
     updateBlock({ getters, commit, state }, data) {
       if (state.blocks && state.blocks.length) {
         commit("updateBlock", data);
