@@ -7,10 +7,6 @@
 <script>
 export default {
   name: "MyButton",
-  data() {
-    return {};
-  },
-  mounted() {},
   methods: {
     click(e) {
       this.$emit("clicked");

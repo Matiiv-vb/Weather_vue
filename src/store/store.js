@@ -1,6 +1,5 @@
 import { createStore } from "vuex";
 import axios from "axios";
-import temperatureChartData from "@/temperature-data.js";
 import helpers from "@/helpers/helpers.js";
 
 export default createStore({
@@ -13,20 +12,11 @@ export default createStore({
       name: "Kharkiv",
       lat: 49.9923,
       lon: 36.231,
-      id: (36.231).toString() + (49.9923).toString(),
+      id: helpers.methods.setIdAsString([36.231, 49.9923]),
     },
     cities: [],
     blocks: [],
-    cards: [
-      // {
-      //   city: {
-      //     name: "Kharkiv",
-      //     lat: 49.9923,
-      //     lon: 36.231,
-      //     id: (36.231).toString() + (49.9923).toString(),
-      //   },
-      // },
-    ],
+    cards: [],
     currentWeather: "",
     fourDaysWeather: "",
     loader: false,
@@ -150,7 +140,6 @@ export default createStore({
       this.dispatch("setBlocksLS");
     },
     updateCard(state, { index, data }) {
-      console.log(index, "TTTTTTTT", data);
       state.cards.forEach((block, ind) => {
         if (block.city.id === data.city.id) {
           state.cards[index] = {
@@ -167,7 +156,7 @@ export default createStore({
     deleteCard(state, { city, idArray }) {
       if (state.cards.length > 1) {
         state.cards = state.cards.filter((el, ind) => {
-          return el.city.id !== city.id && idArray !== ind;
+          return !(el.city.id == city.id && idArray == ind);
         });
       }
       this.commit("setModalData", "");
@@ -175,7 +164,6 @@ export default createStore({
   },
   actions: {
     async fetchCities({ getters, commit }, city) {
-      //   console.log("FFFFFFSSSSS");
       if (city.length > 1)
         try {
           let url = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&lang=ua&appid=${getters.getApiKey}`;
@@ -207,9 +195,11 @@ export default createStore({
         commit("setError", e.toString());
       }
     },
+
     setBlocksLS({ getters, commit }) {
       commit("setBlocksLS");
     },
+
     deleteBlock({ commit }, city) {
       commit("deleteBlock", city.id);
     },
@@ -220,28 +210,28 @@ export default createStore({
         this.commit("setModalData", {
           hint: true,
           message: "In order to add - delete the city, 5 is a max",
-          city: state.city,
+          city: data.city,
         });
       }
       if (state.blocks && state.blocks.length) {
         hasBlock = state.blocks.find((el) => {
           if (el.city.id) {
-            return el.city.id.includes(state.city.id);
+            return el.city.id.includes(data.city.id);
           }
         });
       }
       if (hasBlock) {
         this.commit("setModalData", {
           hint: true,
-          message: `City "${state.city.name}" is already exist in list`,
-          city: state.city,
+          message: `City "${data.city.name}" is already exist in list`,
+          city: data.city,
         });
       }
       if (state.blocks && state.blocks.length <= 4 && !hasBlock) {
         commit("addBlock", {
-          city: state.city,
-          currentWeather: state.currentWeather,
-          fourDaysWeather: state.fourDaysWeather,
+          city: data.city,
+          currentWeather: data.currentWeather,
+          fourDaysWeather: data.fourDaysWeather,
         });
       }
     },
@@ -268,6 +258,7 @@ export default createStore({
         commit("updateBlock", data);
       }
     },
+
     async setLocation({ commit, state, dispatch, getters }, data) {
       try {
         let response = await axios.get(`https://api.techniknews.net/ipgeo/`);
@@ -275,18 +266,16 @@ export default createStore({
           name: response.data.city,
           lat: response.data.lat,
           lon: response.data.lon,
-          id: response.data.lon.toString() + response.data.lat.toString(),
+          id: helpers.methods.setIdAsString([
+            response.data.lon,
+            response.data.lat,
+          ]),
         });
-
-        dispatch("fetchWeather", getters.getCityInfo).then(
-          ({ data, dataForecast }) => {
-            commit("setCurrWeather", data);
-            commit("setFourDaysWeather", dataForecast.list);
-          }
-        );
+        return getters.getCity;
       } catch (e) {
         commit("setError", e.toString());
       }
     },
+
   },
 });

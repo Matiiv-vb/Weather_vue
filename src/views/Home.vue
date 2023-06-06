@@ -29,29 +29,31 @@ export default {
     };
   },
   mounted() {
-    this.$store.dispatch("setLocation");
-    this.$store.commit("takeBlocksLS");
-
-    this.$store
-      .dispatch("fetchWeather", this.$store.getters.getCityInfo)
-      .then(({ data, dataForecast }) => {
-        this.$store.commit("setCurrWeather", data);
-        this.$store.commit("setFourDaysWeather", dataForecast.list);
-
-        if (this.$store.getters.getCards.length < 1) {
-          this.$store.commit("addCards", {
-            city: this.$store.getters.getCityInfo,
-            currentWeather: data,
-            fourDaysWeather: dataForecast.list,
-          });
-        }
-
-        this.showApp = true;
-      });
+    this.fetchWeather();
   },
-  methods: {},
+  methods: {
+    async fetchWeather() {
+      const city = await this.$store.dispatch("setLocation");
 
-  computed: {},
+      const { data, dataForecast } = await this.$store.dispatch(
+        "fetchWeather",
+        city
+      );
+
+      this.$store.commit("setCurrWeather", data);
+      this.$store.commit("setFourDaysWeather", dataForecast.list);
+
+      if (this.$store.getters.getCards.length < 1) {
+        this.$store.commit("addCards", {
+          city: this.$store.getters.getCityInfo,
+          currentWeather: data,
+          fourDaysWeather: dataForecast.list,
+        });
+      }
+
+      this.showApp = true;
+    },
+  },
 };
 </script>
 

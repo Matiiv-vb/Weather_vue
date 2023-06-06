@@ -133,7 +133,6 @@ export default {
   },
   watch: {
     city() {
-      console.log(this.city, "city");
       this.$store.dispatch("fetchCities", this.city).then(() => {
         this.cities = this.$store.getters.getCities;
       });
@@ -196,7 +195,7 @@ export default {
   background: rgba(158, 155, 155, 0.5);
   color: #000;
   position: relative;
-  /* z-index: 4; */
+  z-index: 4;
   width: 100%;
 }
 
@@ -218,7 +217,7 @@ input[type="search"]::-webkit-search-results-decoration {
   top: 20%;
   width: 15px;
   height: 15px;
-  /* z-index: 4; */
+  z-index: 4;
 }
 
 .search__img img {

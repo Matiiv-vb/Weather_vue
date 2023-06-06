@@ -10,7 +10,7 @@
       <div
         class="save-button"
         v-if="isSearch"
-        @click="$store.dispatch('addBlock')"
+        @click="$store.dispatch('addBlock', this.cityDataCardItem)"
       >
         save
       </div>

@@ -24,7 +24,6 @@ export default {
     };
   },
   mounted() {
-    this.$store.dispatch("setLocation");
     this.$store.commit("takeBlocksLS");
 
     this.$store
@@ -35,9 +34,6 @@ export default {
         this.showApp = true;
       });
   },
-  methods: {},
-
-  computed: {},
 };
 </script>
 

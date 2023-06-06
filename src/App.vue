@@ -2,7 +2,6 @@
   <div class="app__wrapper">
     <Navigation />
     <router-view />
-
     <transition name="fade">
       <WeatherModal v-if="getModalData">
         <template v-slot:header>
@@ -38,12 +37,8 @@ export default {
     MyButton,
     Navigation,
   },
-  data() {
-    return {};
-  },
-  mounted() {},
   methods: {
-    deleteItem(e) {
+    deleteItem() {
       if (this.getModalData.block) {
         this.$store.dispatch("deleteBlock", this.getModalData.city);
       }
@@ -54,7 +49,7 @@ export default {
         });
       }
     },
-    hint(e) {
+    hint() {
       this.$store.commit("setModalData", "");
     },
   },

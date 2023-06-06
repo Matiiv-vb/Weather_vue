@@ -38,10 +38,10 @@ export default {
   },
   mounted() {
     this.$el.focus();
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    // window.scrollTo({
+    //   top: 0,
+    //   behavior: "smooth",
+    // });
   },
 };
 </script>
@@ -57,6 +57,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 101;
 }
 
 .modal {
@@ -70,7 +71,7 @@ export default {
 
 .modal__inner {
   border-radius: 5px;
-  background: #bec1c0;
+  background: #f9f9f9;
   width: 100%;
   height: 100%;
 }
@@ -114,7 +115,7 @@ export default {
   content: "";
   width: 3px;
   height: 30px;
-  background: #fff;
+  background: #ff0d0d;
   bottom: 15px;
   left: 0;
   border-radius: 1px;
@@ -133,5 +134,4 @@ export default {
     font-size: 16px;
   }
 }
-
 </style>
