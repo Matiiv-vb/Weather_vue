@@ -19,6 +19,9 @@ export default {
   text-decoration: none;
   margin: 10px 5px;
 }
+a:visited {
+  color: inherit;
+}
 a.router-link-active {
   color: rgb(255, 255, 255);
 }
