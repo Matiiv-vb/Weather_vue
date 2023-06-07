@@ -14,8 +14,9 @@ const routes = [
   },
 ];
 
+const base = process.env.NODE_ENV === "production" ? "/Weather_vue/" : "/";
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(base),
   routes,
 });
 export default router;
