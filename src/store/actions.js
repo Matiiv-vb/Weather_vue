@@ -5,7 +5,7 @@ export default {
   async fetchCities({ getters, commit }, city) {
     if (city.length > 1)
       try {
-        let url = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&lang=ua&appid=${getters.getApiKey}`;
+        let url = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&lang=ua&appid=${getters.getApiKey}`;
         const response = await axios.get(url);
         const data = response.data;
         commit("setCities", []);
