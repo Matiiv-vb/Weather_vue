@@ -8,12 +8,10 @@
 import Chart from "chart.js/auto";
 import TemperatureChartData from "@/temperature-data.js";
 import helpers from "@/helpers/helpers.js";
-import chartMixin from "@/mixin/chart-mixin.js";
 import { isProxy, toRaw } from "vue";
 
 export default {
   name: "TemperatureChart",
-  // mixins: [chartMixin],
   props: {
     cityItem: {
       type: Object,
@@ -28,12 +26,6 @@ export default {
       myChart: "",
     };
   },
-  // created() {
-  //   window.addEventListener("resize", this.myEventHandler);
-  // },
-  // destroyed() {
-  //   window.removeEventListener("resize", this.myEventHandler);
-  // },
   mounted() {
     this.setChart(TemperatureChartData, this.chartId);
 
@@ -47,9 +39,6 @@ export default {
     }
   },
   methods: {
-    myEventHandler(e) {
-      // this.setNewDataToChart(this.data, this.myChart);
-    },
     setChart(data, id) {
       const ctx = document.getElementById(id);
       Chart.defaults.color = "#000";

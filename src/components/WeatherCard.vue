@@ -64,7 +64,7 @@ import weatherSearch from "@/components/WeatherSearch.vue";
 import weatherTemperature from "@/components/WeatherTemperature.vue";
 import weatherFiveDays from "@/components/WeatherFiveDays.vue";
 import TemperatureChart from "@/components/TemperatureChart.vue";
-import Switch from "@/components/Switch.vue";
+import Switch from "@/components/UI/Switch.vue";
 import TemperatureChartData from "@/temperature-data.js";
 
 export default {
