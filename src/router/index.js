@@ -13,8 +13,13 @@ const routes = [
       import(/* webpackChunkName: "about" */ "@/views/Saved.vue"),
   },
 ];
+
+const base =
+  process.env.NODE_ENV === "production"
+    ? "https://matiiv-vb.github.io/Weather_vue/"
+    : "/";
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(base),
   routes,
 });
 export default router;
