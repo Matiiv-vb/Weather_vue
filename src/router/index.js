@@ -16,7 +16,7 @@ const routes = [
 
 const base =
   process.env.NODE_ENV === "production"
-    ? "https://matiiv-vb.github.io/Weather_vue/"
+    ? "/Weather_vue/"
     : "/";
 const router = createRouter({
   history: createWebHistory(base),
